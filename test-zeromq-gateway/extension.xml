@@ -1,0 +1,55 @@
+<mario>
+	<name>test-zeromq-gateway</name>
+
+	<zeromq>
+		<registry>
+			<name>default-zeromq-registry</name>
+			<numiothreads>1</numiothreads>
+		</registry>
+	</zeromq>
+
+	<gateways>
+		<zeromq>
+			<name>test-zeromq-rpc-gateway</name>
+			<registry>default-zeromq-registry</registry>
+			<type>RPC</type>
+			<endpoint>tcp://127.0.0.1:8888</endpoint>
+
+			<queueSize>1024</queueSize>
+			<numHandlers>2</numHandlers>
+			<numSenders>2</numSenders>
+			<messageBufferSize>1024</messageBufferSize>
+			<bufferCapacity>2048</bufferCapacity>
+			<hwm>1000000</hwm>
+		</zeromq>
+	</gateways>
+
+	<producers>
+		<zeromq>
+			<name>test_producer</name>
+			<type>RPC</type>
+			<registry>default-zeromq-registry</registry>
+			<endpoint>tcp://127.0.0.1:8888</endpoint>
+			<numSenders>2</numSenders>
+
+			<receiveEndpoint>tcp://127.0.0.1</receiveEndpoint>
+			<receiveWorkerSize>2</receiveWorkerSize>
+
+			<bufferCapacity>2048</bufferCapacity>
+			<messageBufferSize>1024</messageBufferSize>
+			<threadNamePattern>test-zmq-producer</threadNamePattern>
+			<queueSize>1024</queueSize>
+			<hwm>1000000</hwm>
+		</zeromq>
+	</producers>
+
+	<lifecycles>
+		<handler>
+			<name>echo-handler</name>
+			<handle>nhb.mario.test.EchoServer</handle>
+			<bind>
+				<gateway>test-zeromq-rpc-gateway</gateway>
+			</bind>
+		</handler>
+	</lifecycles>
+</mario>
